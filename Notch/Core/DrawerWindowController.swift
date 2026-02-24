@@ -4,73 +4,176 @@
 //
 //  Created by Jason TIo on 24/02/26.
 //
-//  Owns both the 1-px TriggerWindow and the DrawerWindow.
-//  When the cursor enters the trigger strip the drawer window is made key
-//  and the SwiftUI onHover fires, starting the flip animation.
+//  Listens for two-finger scroll in the top-left hot-zone:
+//   • Scroll down  → drags the panel open live, commits when threshold reached
+//   • Scroll up    → closes
+//   • Click outside → closes
 
 import AppKit
 import SwiftUI
+import Combine
 
 final class DrawerWindowController: NSObject {
 
-    // MARK: - Owned windows
-    private var triggerWindow: TriggerWindow!
-    private var drawerWindow:  DrawerWindow!
+    // MARK: - Window
+    private var drawerWindow: DrawerWindow!
+
+    // MARK: - State
+    private(set) var isOpen = false
+
+    // MARK: - Monitors
+    private var globalScrollMonitor: Any?
+    private var localScrollMonitor:  Any?
+    private var clickMonitor:        Any?
+
+    // MARK: - Callbacks → SwiftUI
+    /// Called with true/false to snap open/close with animation.
+    var onOpenChanged: ((Bool) -> Void)?
+    /// Called with 0…1 during an active drag so progress tracks the finger.
+    var onDragProgress: ((CGFloat) -> Void)?
+
+    // MARK: - Scroll accumulator
+    private var scrollAccum:    CGFloat = 0
+    private var resetWorkItem:  DispatchWorkItem?
+
+    // MARK: - Hot-zone (top-left strip the cursor must be in)
+    private var hotZone: NSRect {
+        guard let s = NSScreen.main ?? NSScreen.screens.first else { return .zero }
+        return NSRect(x: s.frame.minX,
+                      y: s.frame.maxY - 80,
+                      width: DrawerWindow.drawerWidth,
+                      height: 80)
+    }
 
     // MARK: - Init
     override init() {
         super.init()
-        guard let screen = NSScreen.main ?? NSScreen.screens.first else {
-            assertionFailure("No screen found – cannot create drawer windows.")
-            return
-        }
-        buildWindows(on: screen)
+        guard let screen = NSScreen.main ?? NSScreen.screens.first else { return }
+        buildDrawerWindow(on: screen)
+        installMonitors()
     }
 
-    // MARK: - Setup
-    private func buildWindows(on screen: NSScreen) {
+    deinit {
+        [globalScrollMonitor, localScrollMonitor, clickMonitor]
+            .compactMap { $0 }
+            .forEach { NSEvent.removeMonitor($0) }
+    }
 
-        // ── DrawerWindow ──────────────────────────────────────────────────────
+    // MARK: - Window setup
+    private func buildDrawerWindow(on screen: NSScreen) {
         drawerWindow = DrawerWindow(screen: screen)
 
-        // Host the SwiftUI DrawerView inside the drawer window.
-        let drawerView  = DrawerView()
-        let hostingView = NSHostingView(rootView: drawerView)
-        hostingView.frame = drawerWindow.contentView!.bounds
-        hostingView.autoresizingMask = [.width, .height]
-        drawerWindow.contentView = hostingView
+        let vm = DrawerViewModel()
+        vm.requestClose = { [weak self] in self?.setOpen(false) }
+
+        let root = DrawerView(viewModel: vm)
+        let host = NSHostingView(rootView: root)
+        host.frame = drawerWindow.contentView!.bounds
+        host.autoresizingMask = [.width, .height]
+        drawerWindow.contentView = host
         drawerWindow.orderFrontRegardless()
 
-        // ── TriggerWindow ─────────────────────────────────────────────────────
-        triggerWindow = TriggerWindow(screen: screen)
+        onOpenChanged  = { [weak vm] open     in vm?.isOpen   = open }
+        onDragProgress = { [weak vm] progress in vm?.dragProgress = progress }
+    }
 
-        // A tiny invisible SwiftUI view that listens for hover and tells the
-        // drawer window to become key so its own hover tracking activates.
-        let triggerView = TriggerHotZoneView { [weak self] entered in
-            guard let self else { return }
-            if entered {
-                self.drawerWindow.makeKeyAndOrderFront(nil)
+    // MARK: - Monitors
+    private func installMonitors() {
+        // Global monitor catches events when another app is frontmost.
+        globalScrollMonitor = NSEvent.addGlobalMonitorForEvents(matching: .scrollWheel) { [weak self] e in
+            self?.handleScroll(e)
+        }
+        // Local monitor catches events when our own (invisible) window is active.
+        localScrollMonitor = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { [weak self] e in
+            self?.handleScroll(e)
+            return e
+        }
+    }
+
+    // MARK: - Scroll handling
+    private func handleScroll(_ event: NSEvent) {
+        // Only react to active trackpad touch (not inertia / mouse wheel).
+        // event.phase == [] means "no phase info" (mouse wheel or momentum end).
+        let isTrackpad = !event.phase.isEmpty || !event.momentumPhase.isEmpty
+        guard isTrackpad else { return }
+
+        let mouse = NSEvent.mouseLocation
+        let inZone = hotZone.contains(mouse)
+
+        // If cursor is outside zone and drawer is closed, ignore completely.
+        guard inZone || isOpen else { return }
+
+        let delta = event.scrollingDeltaY   // +ve = natural scroll down
+
+        // ── Live drag progress ────────────────────────────────────────────────
+        // Accumulate delta and emit a 0…1 progress so the panel tracks finger.
+        scrollAccum += delta
+
+        resetWorkItem?.cancel()
+        let reset = DispatchWorkItem { [weak self] in self?.scrollAccum = 0 }
+        resetWorkItem = reset
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: reset)
+
+        if !isOpen {
+            // Map 0…60 pts of downward scroll → 0…1 drag progress
+            let drag = max(0, min(scrollAccum / 60, 1))
+            DispatchQueue.main.async { [weak self] in
+                self?.onDragProgress?(drag)
+            }
+            // Commit open when threshold crossed
+            if scrollAccum >= 55 {
+                scrollAccum = 0
+                setOpen(true)
+                installClickOutsideMonitor()
+            }
+        } else {
+            // While open, map upward scroll to closing progress
+            if delta < 0 {
+                let drag = max(0, min(1 + scrollAccum / 40, 1))
+                DispatchQueue.main.async { [weak self] in
+                    self?.onDragProgress?(drag)
+                }
+                if scrollAccum <= -35 {
+                    scrollAccum = 0
+                    setOpen(false)
+                }
             }
         }
-        let triggerHost = NSHostingView(rootView: triggerView)
-        triggerHost.frame = triggerWindow.contentView!.bounds
-        triggerHost.autoresizingMask = [.width, .height]
-        triggerWindow.contentView = triggerHost
-        triggerWindow.orderFrontRegardless()
-    }
-}
 
-// MARK: - TriggerHotZoneView
-/// A completely transparent SwiftUI view occupying the 1-px TriggerWindow.
-/// It fires a callback when the cursor enters / exits.
-private struct TriggerHotZoneView: View {
-    var onHover: (Bool) -> Void
-
-    var body: some View {
-        Color.clear
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .onHover { hovering in
-                onHover(hovering)
+        // End of gesture phase: snap to nearest state
+        if event.phase == .ended || event.phase == .cancelled {
+            scrollAccum = 0
+            let shouldOpen = isOpen ? true : false   // keep current committed state
+            DispatchQueue.main.async { [weak self] in
+                self?.onOpenChanged?(shouldOpen)
             }
+        }
+    }
+
+    // MARK: - Click-outside monitor
+    private func installClickOutsideMonitor() {
+        guard clickMonitor == nil else { return }
+        clickMonitor = NSEvent.addGlobalMonitorForEvents(
+            matching: [.leftMouseDown, .rightMouseDown]
+        ) { [weak self] _ in
+            guard let self else { return }
+            if !self.drawerWindow.frame.contains(NSEvent.mouseLocation) {
+                self.setOpen(false)
+            }
+        }
+    }
+
+    private func removeClickMonitor() {
+        if let m = clickMonitor { NSEvent.removeMonitor(m) }
+        clickMonitor = nil
+    }
+
+    // MARK: - Open / close
+    func setOpen(_ open: Bool) {
+        isOpen = open
+        DispatchQueue.main.async { [weak self] in
+            self?.onOpenChanged?(open)
+        }
+        if !open { removeClickMonitor() }
     }
 }

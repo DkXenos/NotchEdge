@@ -9,17 +9,16 @@ import AppKit
 import SwiftUI
 
 // MARK: - TriggerWindow
-/// A 1-pixel-wide invisible window that covers the full height of the leftmost
-/// screen edge. It captures mouse-entered events and forwards them to the
-/// DrawerWindowController so the drawer can open.
+/// A 1-pixel-tall invisible window that covers the top-left corner of the screen.
+/// It captures mouse-entered events and forwards them to the DrawerWindowController.
 class TriggerWindow: NSWindow {
     init(screen: NSScreen) {
         let screenFrame = screen.frame
         let triggerRect = NSRect(
             x: screenFrame.minX,
-            y: screenFrame.minY,
-            width: 1,
-            height: screenFrame.height
+            y: screenFrame.maxY - 1,          // top-left, 1 px tall
+            width: DrawerWindow.drawerWidth,   // same width as the drawer
+            height: 1
         )
         super.init(
             contentRect: triggerRect,
@@ -39,21 +38,21 @@ class TriggerWindow: NSWindow {
 }
 
 // MARK: - DrawerWindow
-/// The actual panel that slides/flips out from the left edge.
-/// It is transparent and hosts a SwiftUI view.
+/// The notch panel that flips down from the top-left corner.
+/// Transparent, hosts a SwiftUI view.
 class DrawerWindow: NSWindow {
-    static let drawerWidth: CGFloat  = 300
-    static let drawerHeight: CGFloat = 520
+    static let drawerWidth:  CGFloat = 380
+    static let drawerHeight: CGFloat = 340
 
     init(screen: NSScreen) {
         let screenFrame = screen.frame
-        let x = screenFrame.minX                                    // starts flush with left edge
-        let y = screenFrame.minY + (screenFrame.height - DrawerWindow.drawerHeight) / 2
+        let x = screenFrame.minX                              // flush with left edge
+        let y = screenFrame.maxY - DrawerWindow.drawerHeight  // pinned to top
 
         let contentRect = NSRect(
             x: x,
             y: y,
-            width: DrawerWindow.drawerWidth,
+            width:   DrawerWindow.drawerWidth,
             height: DrawerWindow.drawerHeight
         )
         super.init(

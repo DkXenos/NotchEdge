@@ -2,177 +2,268 @@
 //  DrawerView.swift
 //  Notch
 //
-//  Created by Jason TIo on 24/02/26.
-//
-//  Stage 2 – Paper Flip 3D animation driven by hover / drag.
-//  Stage 3 – Frosted-glass background via VisualEffectView (NSVisualEffectView).
 
 import SwiftUI
 import AppKit
+import Combine
+
+// MARK: - DrawerViewModel
+final class DrawerViewModel: ObservableObject {
+    @Published var isOpen:        Bool    = false
+    /// Live 0…1 drag progress fed from the controller during a scroll gesture.
+    @Published var dragProgress:  CGFloat = 0
+    var requestClose: (() -> Void)?
+}
 
 // MARK: - VisualEffectView
-/// Bridges NSVisualEffectView into SwiftUI so we get native frosted-glass blur.
 struct VisualEffectView: NSViewRepresentable {
-    var material: NSVisualEffectView.Material
+    var material:     NSVisualEffectView.Material
     var blendingMode: NSVisualEffectView.BlendingMode
-
     func makeNSView(context: Context) -> NSVisualEffectView {
-        let view = NSVisualEffectView()
-        view.material     = material
-        view.blendingMode = blendingMode
-        view.state        = .active
-        view.wantsLayer   = true
-        return view
+        let v = NSVisualEffectView()
+        v.material = material; v.blendingMode = blendingMode
+        v.state = .active; v.wantsLayer = true
+        return v
     }
+    func updateNSView(_ v: NSVisualEffectView, context: Context) {
+        v.material = material; v.blendingMode = blendingMode
+    }
+}
 
-    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
-        nsView.material     = material
-        nsView.blendingMode = blendingMode
+// MARK: - NotchShape  (sharp top-left, rounded everywhere else)
+struct NotchShape: Shape {
+    var radius: CGFloat = 20
+    func path(in rect: CGRect) -> Path {
+        var p = Path()
+        p.move(to: .init(x: rect.minX, y: rect.minY))
+        p.addLine(to: .init(x: rect.maxX - radius, y: rect.minY))
+        p.addArc(center: .init(x: rect.maxX - radius, y: rect.minY + radius),
+                 radius: radius, startAngle: .degrees(-90), endAngle: .degrees(0),   clockwise: false)
+        p.addLine(to: .init(x: rect.maxX, y: rect.maxY - radius))
+        p.addArc(center: .init(x: rect.maxX - radius, y: rect.maxY - radius),
+                 radius: radius, startAngle: .degrees(0),   endAngle: .degrees(90),  clockwise: false)
+        p.addLine(to: .init(x: rect.minX + radius, y: rect.maxY))
+        p.addArc(center: .init(x: rect.minX + radius, y: rect.maxY - radius),
+                 radius: radius, startAngle: .degrees(90),  endAngle: .degrees(180), clockwise: false)
+        p.addLine(to: .init(x: rect.minX, y: rect.minY))
+        p.closeSubpath()
+        return p
     }
 }
 
 // MARK: - DrawerView
-/// The visible drawer card.
-/// • At rest      → rotated –90° around Y (hidden behind the left edge).
-/// • On hover/drag → rotates progressively from –90° to 0°  (fully open).
 struct DrawerView: View {
 
-    // ── Constants ────────────────────────────────────────────────────────────
-    /// Closed angle stops just short of –90° to avoid a singular projection
-    /// matrix (which SwiftUI warns about when the view is perfectly edge-on).
-    private static let closedAngle: Double = -89.9
-    private static let openAngle:   Double =   0.0
+    @ObservedObject var viewModel: DrawerViewModel
 
-    // ── State ────────────────────────────────────────────────────────────────
-    /// Rotation in degrees.  ~–90 = fully hidden, 0 = fully open.
-    @State private var rotation: Double = DrawerView.closedAngle
-    /// True while the mouse is inside the drawer window.
-    @State private var isHovering: Bool = false
+    // 0 = closed, 1 = fully open — driven by both snap animation and live drag
+    @State private var progress: CGFloat = 0
 
-    // ── Geometry constants ───────────────────────────────────────────────────
-    private let cornerRadius: CGFloat = 16
-    private let shadowRadius: CGFloat = 24
-    private let perspective: CGFloat  = 1 / 600   // subtle 3-D depth
-
-    // ── Body ─────────────────────────────────────────────────────────────────
     var body: some View {
-        ZStack {
-            // ── Frosted glass background (Stage 3) ───────────────────────────
-            VisualEffectView(
-                material:     .hudWindow,
-                blendingMode: .behindWindow
+        panelContent
+            // ── Scale from top-left corner ────────────────────────────────────
+            .scaleEffect(
+                x: 0.10 + 0.90 * progress,
+                y: 0.10 + 0.90 * progress,
+                anchor: .topLeading
             )
-            .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
-
-            // ── Drawer content ───────────────────────────────────────────────
-            drawerContent
-        }
-        .frame(
-            width:  DrawerWindow.drawerWidth,
-            height: DrawerWindow.drawerHeight
-        )
-        // ── Paper-Flip 3-D rotation (Stage 2) ────────────────────────────────
-        // Pivot is the leading (left) edge so it "peels" out from the screen edge.
-        .rotation3DEffect(
-            .degrees(rotation),
-            axis: (x: 0, y: 1, z: 0),
-            anchor: .leading,
-            perspective: perspective
-        )
-        // Drop shadow that appears only when the drawer is open.
-        .shadow(
-            color: .black.opacity(0.35 * openFraction),
-            radius: shadowRadius * openFraction,
-            x: 8 * openFraction,
-            y: 0
-        )
-        // ── Hover detection ──────────────────────────────────────────────────
-        .onHover { hovering in
-            isHovering = hovering
-            withAnimation(drawerAnimation(hovering: hovering)) {
-                rotation = hovering ? Self.openAngle : Self.closedAngle
+            // ── Diagonal slide: peels out of the top-left corner ──────────────
+            .offset(x: -20 * (1 - progress),
+                    y: -24 * (1 - progress))
+            // ── Perspective shear (reduces as it opens) ───────────────────────
+            .transformEffect(shear)
+            // ── Fade ──────────────────────────────────────────────────────────
+            .opacity(Double(max(progress, 0.01)))  // never fully 0 so layout stays
+            // ── Sync on first appear (fixes blank preview) ────────────────────
+            .onAppear {
+                progress = viewModel.isOpen ? 1 : 0
             }
-        }
-        // ── Drag gesture (mouse-drag fallback / fine control) ─────────────────
-        .gesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { value in
-                    // Map horizontal drag 0…drawerWidth → closedAngle…openAngle.
-                    let fraction = min(max(value.location.x / DrawerWindow.drawerWidth, 0), 1)
-                    // Clamp away from exactly –90° to silence the singular-matrix warning.
-                    let raw = Double(fraction) * 90 + Self.closedAngle
-                    rotation = max(raw, Self.closedAngle)
+            // ── Snap animation when isOpen toggles ────────────────────────────
+            .onChange(of: viewModel.isOpen) { _, open in
+                withAnimation(open
+                    ? .spring(response: 0.50, dampingFraction: 0.60)
+                    : .spring(response: 0.28, dampingFraction: 0.88)
+                ) {
+                    progress = open ? 1 : 0
                 }
-                .onEnded { value in
-                    // Snap: if released past 40% open, finish opening; else close.
-                    let fraction = value.location.x / DrawerWindow.drawerWidth
-                    withAnimation(drawerAnimation(hovering: fraction > 0.4)) {
-                        rotation = fraction > 0.4 ? Self.openAngle : Self.closedAngle
-                    }
-                }
-        )
+            }
+            // ── Live drag: no animation, just track finger ────────────────────
+            .onChange(of: viewModel.dragProgress) { _, p in
+                guard !viewModel.isOpen else { return }
+                progress = p
+            }
     }
 
-    // ── Drawer Content ───────────────────────────────────────────────────────
+    // Mild shear that vanishes when fully open
+    private var shear: CGAffineTransform {
+        let t = Double(progress)
+        return CGAffineTransform(a: 1, b: CGFloat(0.04*(1-t)),
+                                 c: CGFloat(0.05*(1-t)), d: 1,
+                                 tx: 0, ty: 0)
+    }
+
+    // MARK: - Glass panel ─────────────────────────────────────────────────────
+    private var panelContent: some View {
+        ZStack(alignment: .topLeading) {
+            // 1. Blur base
+            VisualEffectView(material: .hudWindow, blendingMode: .behindWindow)
+                .clipShape(NotchShape(radius: 20))
+            // 2. Dark tint for readability
+            NotchShape(radius: 20)
+                .fill(Color(white: 0, opacity: 0.52))
+            // 3. Specular top-left shimmer
+            NotchShape(radius: 20)
+                .fill(LinearGradient(stops: [
+                    .init(color: .white.opacity(0.20), location: 0.00),
+                    .init(color: .white.opacity(0.07), location: 0.25),
+                    .init(color: .clear,               location: 0.55),
+                ], startPoint: .topLeading, endPoint: .bottomTrailing))
+            // 4. Hair-line rim
+            NotchShape(radius: 20)
+                .stroke(LinearGradient(
+                    colors: [.white.opacity(0.40), .white.opacity(0.04)],
+                    startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 0.75)
+            // 5. Content
+            notchContent
+        }
+        .frame(width: DrawerWindow.drawerWidth, height: DrawerWindow.drawerHeight)
+        .shadow(color: .black.opacity(0.55 * progress),
+                radius: 36 * progress, x: 4 * progress, y: 8 * progress)
+    }
+
+    // MARK: - Content ─────────────────────────────────────────────────────────
     @ViewBuilder
-    private var drawerContent: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            // Header
-            HStack {
-                Image(systemName: "sidebar.left")
-                    .font(.title2)
-                    .foregroundStyle(.primary)
-                Text("Notch")
-                    .font(.system(size: 18, weight: .semibold, design: .rounded))
-                    .foregroundStyle(.primary)
-                Spacer()
-            }
-            .padding(.bottom, 4)
-
-            Divider()
-
-            // Placeholder tiles — replace with real widgets
-            ForEach(["clock.fill", "calendar", "music.note", "wifi", "bolt.fill"], id: \.self) { icon in
-                HStack(spacing: 14) {
-                    Image(systemName: icon)
-                        .font(.body)
-                        .frame(width: 28, height: 28)
-                        .background(.ultraThinMaterial, in: Circle())
-                    Text(icon.capitalized.replacingOccurrences(of: ".fill", with: "")
-                                         .replacingOccurrences(of: ".", with: " ")
-                                         .capitalized)
-                        .font(.system(size: 14, weight: .medium, design: .rounded))
-                        .foregroundStyle(.primary)
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 10)
-                .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-            }
-
-            Spacer()
+    private var notchContent: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            topBar
+                .padding(.horizontal, 16).padding(.top, 14).padding(.bottom, 10)
+            div
+            mediaPlayer
+                .padding(.horizontal, 16).padding(.vertical, 14)
+            div
+            actionButtons
+                .padding(.horizontal, 16).padding(.vertical, 12)
+            div
+            launchpadGrid
+                .padding(.horizontal, 16).padding(.top, 12).padding(.bottom, 14)
         }
-        .padding(20)
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
-    /// 0 when fully closed, 1 when fully open.
-    private var openFraction: CGFloat {
-        CGFloat((rotation - Self.closedAngle) / (Self.openAngle - Self.closedAngle))
+    private var div: some View {
+        Rectangle().fill(.white.opacity(0.10)).frame(height: 0.5).padding(.horizontal, 12)
     }
 
-    private func drawerAnimation(hovering: Bool) -> Animation {
-        hovering
-            ? .spring(response: 0.45, dampingFraction: 0.72)
-            : .spring(response: 0.35, dampingFraction: 0.85)
+    // MARK: - Top bar
+    private var topBar: some View {
+        HStack(spacing: 8) {
+            // Logo pill
+            RoundedRectangle(cornerRadius: 5, style: .continuous)
+                .fill(LinearGradient(colors: [Color(nsColor: .systemPurple), Color(nsColor: .systemBlue)],
+                                     startPoint: .topLeading, endPoint: .bottomTrailing))
+                .frame(width: 20, height: 20)
+                .overlay(Text("N").font(.system(size: 11, weight: .black, design: .rounded)).foregroundStyle(.white))
+            Text("Notch")
+                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                .foregroundStyle(.white)
+            Spacer()
+            Text(Date(), format: .dateTime.hour().minute())
+                .font(.system(size: 12, weight: .medium, design: .rounded))
+                .foregroundStyle(.white.opacity(0.50))
+            Button { viewModel.requestClose?() } label: {
+                Circle().fill(.white.opacity(0.14)).frame(width: 22, height: 22)
+                    .overlay(Text("✕").font(.system(size: 9, weight: .bold)).foregroundStyle(.white.opacity(0.55)))
+            }.buttonStyle(.plain)
+        }
+    }
+
+    // MARK: - Media player
+    private var mediaPlayer: some View {
+        HStack(spacing: 12) {
+            RoundedRectangle(cornerRadius: 9, style: .continuous)
+                .fill(LinearGradient(colors: [Color(nsColor: .systemPink), Color(nsColor: .systemPurple)],
+                                     startPoint: .topLeading, endPoint: .bottomTrailing))
+                .frame(width: 48, height: 48)
+                .overlay(Text("♪").font(.system(size: 20)).foregroundStyle(.white.opacity(0.9)))
+                .shadow(color: .black.opacity(0.3), radius: 8, x: 0, y: 4)
+            VStack(alignment: .leading, spacing: 3) {
+                Text("Not Playing")
+                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                    .foregroundStyle(.white).lineLimit(1)
+                Text("—")
+                    .font(.system(size: 11, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.45))
+            }
+            Spacer()
+            HStack(spacing: 20) {
+                ForEach(["⏮", "▶", "⏭"], id: \.self) { sym in
+                    Text(sym).font(.system(size: 15)).foregroundStyle(.white.opacity(0.75))
+                        .frame(width: 28, height: 28)
+                }
+            }
+        }
+    }
+
+    // MARK: - Action buttons (text labels only, no risky SF symbols)
+    private let actions = ["Wi-Fi", "BT", "AirPlay", "Focus", "Mirror"]
+
+    private var actionButtons: some View {
+        HStack(spacing: 0) {
+            ForEach(actions, id: \.self) { label in
+                VStack(spacing: 4) {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .fill(.white.opacity(0.11))
+                        .frame(width: 50, height: 34)
+                        .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .stroke(.white.opacity(0.15), lineWidth: 0.5))
+                        .overlay(Text(label)
+                            .font(.system(size: 10, weight: .semibold, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.85)))
+                }
+                if label != actions.last { Spacer() }
+            }
+        }
+    }
+
+    // MARK: - Launchpad (text only)
+    private let appLabels = [
+        "Safari", "Mail",   "Notes",  "Cal",
+        "Maps",   "Music",  "Photos", "Term",
+        "Files",  "News",   "Stocks", "Trash",
+    ]
+    private let cols = Array(repeating: GridItem(.flexible(), spacing: 8), count: 6)
+
+    private var launchpadGrid: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Launchpad")
+                    .font(.system(size: 11, weight: .semibold, design: .rounded))
+                    .foregroundStyle(.white.opacity(0.40))
+                Spacer()
+                Text("↗").font(.system(size: 10)).foregroundStyle(.white.opacity(0.22))
+            }
+            LazyVGrid(columns: cols, spacing: 8) {
+                ForEach(appLabels, id: \.self) { name in
+                    RoundedRectangle(cornerRadius: 9, style: .continuous)
+                        .fill(.white.opacity(0.09))
+                        .overlay(RoundedRectangle(cornerRadius: 9, style: .continuous)
+                            .stroke(.white.opacity(0.14), lineWidth: 0.5))
+                        .frame(width: 38, height: 38)
+                        .overlay(Text(name)
+                            .font(.system(size: 7.5, weight: .medium, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.70))
+                            .multilineTextAlignment(.center)
+                            .lineLimit(2))
+                }
+            }
+        }
     }
 }
 
 // MARK: - Preview
 #Preview {
-    DrawerView()
+    let vm = DrawerViewModel()
+    vm.isOpen = true
+    return DrawerView(viewModel: vm)
         .frame(width: DrawerWindow.drawerWidth, height: DrawerWindow.drawerHeight)
+        .background(Color(white: 0.07))
 }
