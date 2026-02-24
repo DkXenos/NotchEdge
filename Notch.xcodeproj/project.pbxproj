@@ -250,6 +250,7 @@
                 ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
                 CODE_SIGN_ENTITLEMENTS = Notch/Notch.entitlements;
                 CODE_SIGN_STYLE = Automatic;
+                SWIFT_OBJC_BRIDGING_HEADER = "Notch/Notch-Bridging-Header.h";
                 COMBINE_HIDPI_IMAGES = YES;
                 CURRENT_PROJECT_VERSION = 1;
                 ENABLE_APP_SANDBOX = NO;
@@ -281,6 +282,7 @@
                 ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
                 CODE_SIGN_ENTITLEMENTS = Notch/Notch.entitlements;
                 CODE_SIGN_STYLE = Automatic;
+                SWIFT_OBJC_BRIDGING_HEADER = "Notch/Notch-Bridging-Header.h";
                 COMBINE_HIDPI_IMAGES = YES;
                 CURRENT_PROJECT_VERSION = 1;
                 ENABLE_APP_SANDBOX = NO;
