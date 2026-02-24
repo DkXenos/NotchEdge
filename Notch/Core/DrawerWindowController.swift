@@ -66,28 +66,20 @@ final class DrawerWindowController: NSObject {
         let vm = DrawerViewModel()
         vm.requestClose = { [weak self] in self?.setOpen(false) }
 
-        let root = DrawerView(viewModel: vm)
-        let host = NSHostingView(rootView: root)
-        host.frame = drawerWindow.contentView!.bounds
+        // Build the SwiftUI root and wrap it in a hosting view.
+        // Rule: do NOT touch host.wantsLayer, host.layer, or host.layer?.backgroundColor.
+        // Window transparency is already fully configured in DrawerWindow.init via
+        // isOpaque=false / backgroundColor=.clear / hasShadow=false.
+        // Touching the layer here re-introduces an opaque black backing rectangle.
+        let host = NSHostingView(rootView: DrawerView(viewModel: vm))
+        host.frame = NSRect(origin: .zero,
+                            size:   drawerWindow.contentRect(forFrameRect: drawerWindow.frame).size)
         host.autoresizingMask = [.width, .height]
-
-        // ── Kill every background that could paint a dark rectangle ───────────
-        host.wantsLayer = true
-        host.layer?.backgroundColor = CGColor.clear
-        host.layer?.isOpaque        = false
-        // Disable the hosting view's own clipping so scale animations
-        // that grow beyond the panel rect are never clipped.
-        host.layer?.masksToBounds   = false
-
-        drawerWindow.contentView?.wantsLayer    = true
-        drawerWindow.contentView?.layer?.backgroundColor = CGColor.clear
-        drawerWindow.contentView?.layer?.isOpaque        = false
-        drawerWindow.contentView?.layer?.masksToBounds   = false
 
         drawerWindow.contentView = host
         drawerWindow.orderFrontRegardless()
 
-        onOpenChanged  = { [weak vm] open     in vm?.isOpen   = open }
+        onOpenChanged  = { [weak vm] open     in vm?.isOpen       = open }
         onDragProgress = { [weak vm] progress in vm?.dragProgress = progress }
     }
 

@@ -38,42 +38,42 @@ class TriggerWindow: NSWindow {
 }
 
 // MARK: - DrawerWindow
-/// The notch panel that drops from the top-left corner.
-/// The window is intentionally LARGER than the visible panel so the
-/// scale/offset animation never clips at the window edge.
+/// Borderless, fully transparent window that hosts the notch panel.
+/// Sized exactly to the panel — no bleed padding needed because the
+/// SwiftUI view's Color.clear background handles the surrounding space.
 class DrawerWindow: NSWindow {
+
     static let drawerWidth:  CGFloat = 380
     static let drawerHeight: CGFloat = 340
 
-    /// Extra transparent bleed around the panel so animations never clip.
-    static let bleed: CGFloat = 40
-
     init(screen: NSScreen) {
-        let screenFrame = screen.frame
-        // Shift left/up by bleed so the panel's top-left corner sits at (0,0)
-        // of the screen, while the window itself extends slightly off-screen.
-        let x = screenFrame.minX - DrawerWindow.bleed
-        let y = screenFrame.maxY - DrawerWindow.drawerHeight - DrawerWindow.bleed
-
+        let f = screen.frame
+        // Top-left corner of the screen, exactly panel-sized.
         let contentRect = NSRect(
-            x: x,
-            y: y,
-            width:  DrawerWindow.drawerWidth  + DrawerWindow.bleed * 2,
-            height: DrawerWindow.drawerHeight + DrawerWindow.bleed * 2
+            x: f.minX,
+            y: f.maxY - DrawerWindow.drawerHeight,
+            width:  DrawerWindow.drawerWidth,
+            height: DrawerWindow.drawerHeight
         )
         super.init(
-            contentRect: contentRect,
-            styleMask: [.borderless],
-            backing: .buffered,
-            defer: false
+            contentRect:  contentRect,
+            styleMask:    [.borderless],
+            backing:      .buffered,
+            defer:        false
         )
-        isOpaque            = false
-        backgroundColor     = .clear
-        level               = .screenSaver
-        collectionBehavior  = [.canJoinAllSpaces, .fullScreenAuxiliary]
-        ignoresMouseEvents  = false
+        // ── Transparency ──────────────────────────────────────────────────────
+        // These three lines are the ONLY thing needed to get a fully transparent
+        // window. Do NOT set them on the contentView or its layer — AppKit
+        // manages those automatically once the window is transparent.
+        isOpaque        = false
+        backgroundColor = .clear
+        hasShadow       = false
+
+        // ── Behaviour ─────────────────────────────────────────────────────────
+        level                = .screenSaver
+        collectionBehavior   = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        ignoresMouseEvents   = false
         isReleasedWhenClosed = false
-        hasShadow           = false
         acceptsMouseMovedEvents = true
     }
 

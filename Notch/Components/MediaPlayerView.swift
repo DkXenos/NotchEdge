@@ -23,7 +23,6 @@ struct MediaPlayerView: View {
                         .font(.system(size: 20))
                         .foregroundStyle(.white.opacity(0.9))
                 )
-                .shadow(color: .black.opacity(0.3), radius: 8, x: 0, y: 4)
 
             // Track info
             VStack(alignment: .leading, spacing: 3) {
