@@ -72,8 +72,16 @@ final class DrawerWindowController: NSObject {
         // isOpaque=false / backgroundColor=.clear / hasShadow=false.
         // Touching the layer here re-introduces an opaque black backing rectangle.
         let host = NSHostingView(rootView: DrawerView(viewModel: vm))
-        host.frame = NSRect(origin: .zero,
-                            size:   drawerWindow.contentRect(forFrameRect: drawerWindow.frame).size)
+        // Frame fills the full window content area (panel + bleed).
+        // The SwiftUI DrawerView uses Color.clear as its canvas so the
+        // bleed region is fully transparent — no artifacts.
+        host.frame = NSRect(
+            origin: .zero,
+            size: NSSize(
+                width:  DrawerWindow.drawerWidth  + DrawerWindow.bleed,
+                height: DrawerWindow.drawerHeight + DrawerWindow.bleed
+            )
+        )
         host.autoresizingMask = [.width, .height]
 
         drawerWindow.contentView = host

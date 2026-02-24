@@ -39,21 +39,25 @@ class TriggerWindow: NSWindow {
 
 // MARK: - DrawerWindow
 /// Borderless, fully transparent window that hosts the notch panel.
-/// Sized exactly to the panel — no bleed padding needed because the
-/// SwiftUI view's Color.clear background handles the surrounding space.
+/// The window is intentionally larger than the visible panel by `bleed`
+/// on the right and bottom edges so the bouncy spring overshoot never
+/// gets clipped by the window boundary. The extra space is fully
+/// transparent — no shadow, no background.
 class DrawerWindow: NSWindow {
 
     static let drawerWidth:  CGFloat = 380
     static let drawerHeight: CGFloat = 340
+    /// Extra transparent margin so spring overshoot is never clipped.
+    static let bleed:        CGFloat = 60
 
     init(screen: NSScreen) {
         let f = screen.frame
-        // Top-left corner of the screen, exactly panel-sized.
+        // Anchor top-left to the screen corner; extend right+down by bleed.
         let contentRect = NSRect(
             x: f.minX,
-            y: f.maxY - DrawerWindow.drawerHeight,
-            width:  DrawerWindow.drawerWidth,
-            height: DrawerWindow.drawerHeight
+            y: f.maxY - DrawerWindow.drawerHeight - DrawerWindow.bleed,
+            width:  DrawerWindow.drawerWidth  + DrawerWindow.bleed,
+            height: DrawerWindow.drawerHeight + DrawerWindow.bleed
         )
         super.init(
             contentRect:  contentRect,
