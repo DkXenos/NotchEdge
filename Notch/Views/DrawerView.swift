@@ -78,13 +78,12 @@ struct DrawerView: View {
                 endPoint:   .bottomTrailing
             )
 
-            // 4. Content
-            panelContent
+            // 4. Content — switches between home and terminal panels
+            panelSwitcher
         }
-        // Single clip — applied once, at the outermost level.
-        // This correctly masks every layer above, including the blur.
+        // Single clip at the outermost level.
         .clipShape(NotchShape(radius: 20))
-        // Hair-line rim drawn on top of the clip so it sits on the edge.
+        // Hair-line rim on top of the clip.
         .overlay(
             NotchShape(radius: 20)
                 .stroke(
@@ -99,9 +98,33 @@ struct DrawerView: View {
         .frame(width: DrawerWindow.drawerWidth, height: DrawerWindow.drawerHeight)
     }
 
-    // MARK: - Content layout
-    /// Stacks the four component sections with glass dividers between them.
-    private var panelContent: some View {
+    // MARK: - Panel switcher
+    @ViewBuilder
+    private var panelSwitcher: some View {
+        ZStack {
+            if viewModel.activePanel == .home {
+                homeContent
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .leading).combined(with: .opacity),
+                        removal:   .move(edge: .leading).combined(with: .opacity)
+                    ))
+            } else {
+                TerminalView(onBack: {
+                    withAnimation(.spring(response: 0.32, dampingFraction: 0.82)) {
+                        viewModel.activePanel = .home
+                    }
+                })
+                .transition(.asymmetric(
+                    insertion: .move(edge: .trailing).combined(with: .opacity),
+                    removal:   .move(edge: .trailing).combined(with: .opacity)
+                ))
+            }
+        }
+        .animation(.spring(response: 0.32, dampingFraction: 0.82), value: viewModel.activePanel)
+    }
+
+    // MARK: - Home content
+    private var homeContent: some View {
         VStack(alignment: .leading, spacing: 0) {
             TopBarView(onClose: { viewModel.requestClose?() })
                 .padding(.horizontal, 16)
@@ -116,9 +139,13 @@ struct DrawerView: View {
 
             GlassDivider()
 
-            ActionButtonsView()
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
+            ActionButtonsView(onTerminalTap: {
+                withAnimation(.spring(response: 0.32, dampingFraction: 0.82)) {
+                    viewModel.activePanel = .terminal
+                }
+            })
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
 
             GlassDivider()
 
