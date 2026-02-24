@@ -38,22 +38,28 @@ class TriggerWindow: NSWindow {
 }
 
 // MARK: - DrawerWindow
-/// The notch panel that flips down from the top-left corner.
-/// Transparent, hosts a SwiftUI view.
+/// The notch panel that drops from the top-left corner.
+/// The window is intentionally LARGER than the visible panel so the
+/// scale/offset animation never clips at the window edge.
 class DrawerWindow: NSWindow {
     static let drawerWidth:  CGFloat = 380
     static let drawerHeight: CGFloat = 340
 
+    /// Extra transparent bleed around the panel so animations never clip.
+    static let bleed: CGFloat = 40
+
     init(screen: NSScreen) {
         let screenFrame = screen.frame
-        let x = screenFrame.minX                              // flush with left edge
-        let y = screenFrame.maxY - DrawerWindow.drawerHeight  // pinned to top
+        // Shift left/up by bleed so the panel's top-left corner sits at (0,0)
+        // of the screen, while the window itself extends slightly off-screen.
+        let x = screenFrame.minX - DrawerWindow.bleed
+        let y = screenFrame.maxY - DrawerWindow.drawerHeight - DrawerWindow.bleed
 
         let contentRect = NSRect(
             x: x,
             y: y,
-            width:   DrawerWindow.drawerWidth,
-            height: DrawerWindow.drawerHeight
+            width:  DrawerWindow.drawerWidth  + DrawerWindow.bleed * 2,
+            height: DrawerWindow.drawerHeight + DrawerWindow.bleed * 2
         )
         super.init(
             contentRect: contentRect,
@@ -61,17 +67,16 @@ class DrawerWindow: NSWindow {
             backing: .buffered,
             defer: false
         )
-        isOpaque = false
-        backgroundColor = .clear
-        level = .screenSaver
-        collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
-        ignoresMouseEvents = false
+        isOpaque            = false
+        backgroundColor     = .clear
+        level               = .screenSaver
+        collectionBehavior  = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        ignoresMouseEvents  = false
         isReleasedWhenClosed = false
-        hasShadow = false          // shadow is handled by the SwiftUI layer
+        hasShadow           = false
         acceptsMouseMovedEvents = true
     }
 
-    // Allow the window to become key so hover/keyboard events work correctly.
-    override var canBecomeKey: Bool { true }
+    override var canBecomeKey:  Bool { true  }
     override var canBecomeMain: Bool { false }
 }

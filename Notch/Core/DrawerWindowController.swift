@@ -70,6 +70,20 @@ final class DrawerWindowController: NSObject {
         let host = NSHostingView(rootView: root)
         host.frame = drawerWindow.contentView!.bounds
         host.autoresizingMask = [.width, .height]
+
+        // ── Kill every background that could paint a dark rectangle ───────────
+        host.wantsLayer = true
+        host.layer?.backgroundColor = CGColor.clear
+        host.layer?.isOpaque        = false
+        // Disable the hosting view's own clipping so scale animations
+        // that grow beyond the panel rect are never clipped.
+        host.layer?.masksToBounds   = false
+
+        drawerWindow.contentView?.wantsLayer    = true
+        drawerWindow.contentView?.layer?.backgroundColor = CGColor.clear
+        drawerWindow.contentView?.layer?.isOpaque        = false
+        drawerWindow.contentView?.layer?.masksToBounds   = false
+
         drawerWindow.contentView = host
         drawerWindow.orderFrontRegardless()
 
