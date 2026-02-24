@@ -76,7 +76,10 @@ class DrawerWindow: NSWindow {
         // ── Behaviour ─────────────────────────────────────────────────────────
         level                = .screenSaver
         collectionBehavior   = [.canJoinAllSpaces, .fullScreenAuxiliary]
-        ignoresMouseEvents   = false
+        // Start transparent to mouse — enabled only when the panel is open.
+        // This lets clicks pass through to whatever is behind the window
+        // while the notch is closed.
+        ignoresMouseEvents   = true
         isReleasedWhenClosed = false
         acceptsMouseMovedEvents = true
     }

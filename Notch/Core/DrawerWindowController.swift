@@ -186,7 +186,10 @@ final class DrawerWindowController: NSObject {
     func setOpen(_ open: Bool) {
         isOpen = open
         DispatchQueue.main.async { [weak self] in
-            self?.onOpenChanged?(open)
+            guard let self else { return }
+            // Pass clicks through when closed; intercept when open.
+            self.drawerWindow.ignoresMouseEvents = !open
+            self.onOpenChanged?(open)
         }
         if !open { removeClickMonitor() }
     }
