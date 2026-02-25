@@ -26,8 +26,8 @@ class TriggerWindow: NSWindow {
             backing: .buffered,
             defer: false
         )
-        isOpaque = false
-        backgroundColor = .clear
+        isOpaque = true
+        backgroundColor = NSColor.black
         level = .screenSaver
         collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         ignoresMouseEvents = false
@@ -45,7 +45,7 @@ class TriggerWindow: NSWindow {
 /// transparent — no shadow, no background.
 class DrawerWindow: NSWindow {
 
-    static let drawerWidth:  CGFloat = 380
+    static let drawerWidth:  CGFloat = 400
     static let drawerHeight: CGFloat = 340
     /// Extra transparent margin so spring overshoot is never clipped.
     static let bleed:        CGFloat = 60

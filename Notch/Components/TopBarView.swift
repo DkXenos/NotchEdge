@@ -36,18 +36,18 @@ struct TopBarView: View {
                 .font(.system(size: 12, weight: .medium, design: .rounded))
                 .foregroundStyle(.white.opacity(0.50))
 
-            // Close button
-            Button(action: onClose) {
-                Circle()
-                    .fill(.white.opacity(0.14))
-                    .frame(width: 22, height: 22)
-                    .overlay(
-                        Text("✕")
-                            .font(.system(size: 9, weight: .bold))
-                            .foregroundStyle(.white.opacity(0.55))
-                    )
-            }
-            .buttonStyle(.plain)
+//            // Close button
+//            Button(action: onClose) {
+//                Circle()
+//                    .fill(.white.opacity(0.14))
+//                    .frame(width: 22, height: 22)
+//                    .overlay(
+//                        Text("✕")
+//                            .font(.system(size: 9, weight: .bold))
+//                            .foregroundStyle(.white.opacity(0.55))
+//                    )
+//            }
+//            .buttonStyle(.plain)
         }
     }
 }

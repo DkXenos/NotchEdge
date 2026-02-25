@@ -65,13 +65,13 @@ struct DrawerView: View {
             VisualEffectView(material: .hudWindow, blendingMode: .behindWindow)
 
             // 2. Dark tint for legibility
-            Color.black.opacity(0.52)
+            Color.black.opacity(1)
 
             // 3. Specular highlight
             LinearGradient(
                 stops: [
-                    .init(color: .white.opacity(0.18), location: 0.00),
-                    .init(color: .white.opacity(0.06), location: 0.30),
+                    .init(color: .white.opacity(0), location: 0.00),
+                    .init(color: .white.opacity(0), location: 0.30),
                     .init(color: .clear,               location: 0.60),
                 ],
                 startPoint: .topLeading,
@@ -88,7 +88,7 @@ struct DrawerView: View {
             NotchShape(radius: 20)
                 .stroke(
                     LinearGradient(
-                        colors: [.white.opacity(0.35), .white.opacity(0.05)],
+                        colors: [.white.opacity(0), .white.opacity(0)],
                         startPoint: .topLeading,
                         endPoint:   .bottomTrailing
                     ),
