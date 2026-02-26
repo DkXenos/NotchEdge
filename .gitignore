@@ -1,0 +1,53 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Xcode Build Output
+build/
+DerivedData/
+*.xcarchive
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Xcode User-specific files
+*.xcuserstate
+xcuserdata/
+*.xcuserdatad/
+
+# Xcode Previews
+*.xcpreviewdata
+
+# Swift Package Manager
+.build/
+.swiftpm/
+*.resolved
+
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# Code coverage
+*.gcno
+*.gcda
+
+# macOS Finder
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
