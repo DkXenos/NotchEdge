@@ -1,0 +1,149 @@
+{
+  "" : {
+    "diagnostics" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/Notch-primary.dia",
+    "emit-module-dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/Notch-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/Notch-primary-emit-module.dia",
+    "pch" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/Notch-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/Notch-primary.swiftdeps"
+  },
+  "/Users/jaysn/Documents/MAD/PROJECTS/Notch/Notch/App/ContentView.swift" : {
+    "const-values" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/ContentView.d",
+    "diagnostics" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/ContentView.dia",
+    "index-unit-output-path" : "/Notch.build/Debug/Notch.build/Objects-normal/x86_64/ContentView.o",
+    "llvm-bc" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/ContentView.bc",
+    "object" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/ContentView.o",
+    "swift-dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/ContentView~partial.swiftmodule"
+  },
+  "/Users/jaysn/Documents/MAD/PROJECTS/Notch/Notch/App/NotchApp.swift" : {
+    "const-values" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/NotchApp.swiftconstvalues",
+    "dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/NotchApp.d",
+    "diagnostics" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/NotchApp.dia",
+    "index-unit-output-path" : "/Notch.build/Debug/Notch.build/Objects-normal/x86_64/NotchApp.o",
+    "llvm-bc" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/NotchApp.bc",
+    "object" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/NotchApp.o",
+    "swift-dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/NotchApp.swiftdeps",
+    "swiftmodule" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/NotchApp~partial.swiftmodule"
+  },
+  "/Users/jaysn/Documents/MAD/PROJECTS/Notch/Notch/Components/ActionButtonsView.swift" : {
+    "const-values" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/ActionButtonsView.swiftconstvalues",
+    "dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/ActionButtonsView.d",
+    "diagnostics" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/ActionButtonsView.dia",
+    "index-unit-output-path" : "/Notch.build/Debug/Notch.build/Objects-normal/x86_64/ActionButtonsView.o",
+    "llvm-bc" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/ActionButtonsView.bc",
+    "object" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/ActionButtonsView.o",
+    "swift-dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/ActionButtonsView.swiftdeps",
+    "swiftmodule" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/ActionButtonsView~partial.swiftmodule"
+  },
+  "/Users/jaysn/Documents/MAD/PROJECTS/Notch/Notch/Components/LaunchpadGridView.swift" : {
+    "const-values" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/LaunchpadGridView.swiftconstvalues",
+    "dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/LaunchpadGridView.d",
+    "diagnostics" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/LaunchpadGridView.dia",
+    "index-unit-output-path" : "/Notch.build/Debug/Notch.build/Objects-normal/x86_64/LaunchpadGridView.o",
+    "llvm-bc" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/LaunchpadGridView.bc",
+    "object" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/LaunchpadGridView.o",
+    "swift-dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/LaunchpadGridView.swiftdeps",
+    "swiftmodule" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/LaunchpadGridView~partial.swiftmodule"
+  },
+  "/Users/jaysn/Documents/MAD/PROJECTS/Notch/Notch/Components/MediaPlayerView.swift" : {
+    "const-values" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/MediaPlayerView.swiftconstvalues",
+    "dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/MediaPlayerView.d",
+    "diagnostics" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/MediaPlayerView.dia",
+    "index-unit-output-path" : "/Notch.build/Debug/Notch.build/Objects-normal/x86_64/MediaPlayerView.o",
+    "llvm-bc" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/MediaPlayerView.bc",
+    "object" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/MediaPlayerView.o",
+    "swift-dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/MediaPlayerView.swiftdeps",
+    "swiftmodule" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/MediaPlayerView~partial.swiftmodule"
+  },
+  "/Users/jaysn/Documents/MAD/PROJECTS/Notch/Notch/Components/TerminalView.swift" : {
+    "const-values" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/TerminalView.swiftconstvalues",
+    "dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/TerminalView.d",
+    "diagnostics" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/TerminalView.dia",
+    "index-unit-output-path" : "/Notch.build/Debug/Notch.build/Objects-normal/x86_64/TerminalView.o",
+    "llvm-bc" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/TerminalView.bc",
+    "object" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/TerminalView.o",
+    "swift-dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/TerminalView.swiftdeps",
+    "swiftmodule" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/TerminalView~partial.swiftmodule"
+  },
+  "/Users/jaysn/Documents/MAD/PROJECTS/Notch/Notch/Components/TopBarView.swift" : {
+    "const-values" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/TopBarView.swiftconstvalues",
+    "dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/TopBarView.d",
+    "diagnostics" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/TopBarView.dia",
+    "index-unit-output-path" : "/Notch.build/Debug/Notch.build/Objects-normal/x86_64/TopBarView.o",
+    "llvm-bc" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/TopBarView.bc",
+    "object" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/TopBarView.o",
+    "swift-dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/TopBarView.swiftdeps",
+    "swiftmodule" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/TopBarView~partial.swiftmodule"
+  },
+  "/Users/jaysn/Documents/MAD/PROJECTS/Notch/Notch/Core/DrawerWindowController.swift" : {
+    "const-values" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerWindowController.swiftconstvalues",
+    "dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerWindowController.d",
+    "diagnostics" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerWindowController.dia",
+    "index-unit-output-path" : "/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerWindowController.o",
+    "llvm-bc" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerWindowController.bc",
+    "object" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerWindowController.o",
+    "swift-dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerWindowController.swiftdeps",
+    "swiftmodule" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerWindowController~partial.swiftmodule"
+  },
+  "/Users/jaysn/Documents/MAD/PROJECTS/Notch/Notch/Core/Window.swift" : {
+    "const-values" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/Window.swiftconstvalues",
+    "dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/Window.d",
+    "diagnostics" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/Window.dia",
+    "index-unit-output-path" : "/Notch.build/Debug/Notch.build/Objects-normal/x86_64/Window.o",
+    "llvm-bc" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/Window.bc",
+    "object" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/Window.o",
+    "swift-dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/Window.swiftdeps",
+    "swiftmodule" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/Window~partial.swiftmodule"
+  },
+  "/Users/jaysn/Documents/MAD/PROJECTS/Notch/Notch/Utilities/NotchShape.swift" : {
+    "const-values" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/NotchShape.swiftconstvalues",
+    "dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/NotchShape.d",
+    "diagnostics" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/NotchShape.dia",
+    "index-unit-output-path" : "/Notch.build/Debug/Notch.build/Objects-normal/x86_64/NotchShape.o",
+    "llvm-bc" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/NotchShape.bc",
+    "object" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/NotchShape.o",
+    "swift-dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/NotchShape.swiftdeps",
+    "swiftmodule" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/NotchShape~partial.swiftmodule"
+  },
+  "/Users/jaysn/Documents/MAD/PROJECTS/Notch/Notch/Utilities/VisualEffectView.swift" : {
+    "const-values" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/VisualEffectView.swiftconstvalues",
+    "dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/VisualEffectView.d",
+    "diagnostics" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/VisualEffectView.dia",
+    "index-unit-output-path" : "/Notch.build/Debug/Notch.build/Objects-normal/x86_64/VisualEffectView.o",
+    "llvm-bc" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/VisualEffectView.bc",
+    "object" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/VisualEffectView.o",
+    "swift-dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/VisualEffectView.swiftdeps",
+    "swiftmodule" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/VisualEffectView~partial.swiftmodule"
+  },
+  "/Users/jaysn/Documents/MAD/PROJECTS/Notch/Notch/ViewModels/DrawerViewModel.swift" : {
+    "const-values" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerViewModel.swiftconstvalues",
+    "dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerViewModel.d",
+    "diagnostics" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerViewModel.dia",
+    "index-unit-output-path" : "/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerViewModel.o",
+    "llvm-bc" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerViewModel.bc",
+    "object" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerViewModel.o",
+    "swift-dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerViewModel.swiftdeps",
+    "swiftmodule" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerViewModel~partial.swiftmodule"
+  },
+  "/Users/jaysn/Documents/MAD/PROJECTS/Notch/Notch/Views/DrawerView.swift" : {
+    "const-values" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerView.swiftconstvalues",
+    "dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerView.d",
+    "diagnostics" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerView.dia",
+    "index-unit-output-path" : "/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerView.o",
+    "llvm-bc" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerView.bc",
+    "object" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerView.o",
+    "swift-dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerView.swiftdeps",
+    "swiftmodule" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/DrawerView~partial.swiftmodule"
+  },
+  "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/Notch.build/Debug/Notch.build/Objects-normal/x86_64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/jaysn/Documents/MAD/PROJECTS/Notch/build/Notch.build/Debug/Notch.build/Objects-normal/x86_64/GeneratedAssetSymbols~partial.swiftmodule"
+  }
+}

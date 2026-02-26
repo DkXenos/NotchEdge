@@ -1,0 +1,32 @@
+{
+  "source": "/Users/jaysn/Documents/MAD/PROJECTS/Notch/Notch/Components/TerminalView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Terminal",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 616
+        }
+      },
+      {
+        "comment": "",
+        "key": "Reset",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 626
+        }
+      },
+      {
+        "comment": "",
+        "key": "❯",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 662
+        }
+      }
+    ]
+  },
+  "version": 1
+}
