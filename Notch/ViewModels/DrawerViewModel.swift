@@ -18,6 +18,9 @@ final class DrawerViewModel: ObservableObject {
     /// True when the panel is fully committed open.
     @Published var isOpen: Bool = false
 
+    /// True while the cursor hovers over the trigger zone but the drawer is closed.
+    @Published var isPeeking: Bool = false
+
     /// Live 0…1 scroll progress fed by the controller during an active gesture,
     /// so the panel visually tracks the finger before the threshold is crossed.
     @Published var dragProgress: CGFloat = 0

@@ -87,3 +87,37 @@ class DrawerWindow: NSWindow {
     override var canBecomeKey:  Bool { true  }
     override var canBecomeMain: Bool { false }
 }
+
+// MARK: - PeekWindow
+/// A small pill-shaped window that appears in the top-left corner when the
+/// cursor enters the hot-zone but the drawer hasn't been opened yet.
+/// It shows the app logo as a subtle "peek" affordance.
+class PeekWindow: NSWindow {
+
+    /// Fixed size of the peek pill.
+    static let peekWidth:  CGFloat = 120
+    static let peekHeight: CGFloat = 36
+
+    init(screen: NSScreen) {
+        let f = screen.frame
+        let rect = NSRect(
+            x: f.minX,
+            y: f.maxY - PeekWindow.peekHeight,
+            width:  PeekWindow.peekWidth,
+            height: PeekWindow.peekHeight
+        )
+        super.init(
+            contentRect:  rect,
+            styleMask:    [.borderless],
+            backing:      .buffered,
+            defer:        false
+        )
+        isOpaque        = false
+        backgroundColor = .clear
+        hasShadow       = false
+        level                = .screenSaver
+        collectionBehavior   = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        ignoresMouseEvents   = true   // always pass-through
+        isReleasedWhenClosed = false
+    }
+}
