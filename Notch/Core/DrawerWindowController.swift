@@ -55,7 +55,7 @@ final class DrawerWindowController: NSObject {
        super.init()
        guard let screen = NSScreen.main ?? NSScreen.screens.first else { return }
        buildDrawerWindow(on: screen)
-       buildPeekWindow(on: screen)
+       if AppConfig.peekEnabled { buildPeekWindow(on: screen) }
        installMonitors()
    }
 
@@ -137,6 +137,7 @@ final class DrawerWindowController: NSObject {
    private var _wasPeeking = false
 
    private func updatePeekState() {
+       guard AppConfig.peekEnabled else { return }
        guard !isOpen else {
            // Drawer is open — hide peek if it was showing.
            if _wasPeeking {
